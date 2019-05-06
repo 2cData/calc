@@ -1,6 +1,5 @@
-package com.toseedata.pin.calc.service;
+package com.toseedata.pin.calc.domain;
 
-import com.toseedata.pin.calc.domain.Amount;
 import org.javamoney.moneta.FastMoney;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,23 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//import org.junit.platform.runner.JUnitPlatform;
-//import org.junit.runner.RunWith;
-//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-//@RunWith(JUnitPlatform.class)
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@SpringBootTest
-//@RunWith(JUnitPlatform.class)
-//@ExtendWith(SpringExtension.class)
 public class CashOnCashReturnTest {
     String currencyCode = "USD";
     long yearOneCashFlow = 100;
-    Amount yearOneCashFlowAmount = new Amount(new BigDecimal(yearOneCashFlow), currencyCode);
+    MonetaryAmount yearOneCashFlowAmount = FastMoney.of(yearOneCashFlow, currencyCode);
+
     @Autowired
     private CashOnCashReturn cashOnCashReturn;
 
@@ -38,8 +28,8 @@ public class CashOnCashReturnTest {
 
     @Test
     void testInvalidYearOneCashFlow() {
-        Amount yearOneCashFlow = new Amount(new BigDecimal(BigInteger.ZERO), currencyCode);
-        Amount yearOneCapitalExpense = new Amount(new BigDecimal(BigInteger.ONE), currencyCode);
+        MonetaryAmount yearOneCashFlow = FastMoney.of(BigDecimal.ZERO, currencyCode);
+        MonetaryAmount yearOneCapitalExpense = FastMoney.of(BigDecimal.ONE, currencyCode);
 
         Assertions.assertThrows(IllegalArgumentException.class, () ->
                 new CashOnCashReturn(yearOneCashFlow, yearOneCapitalExpense));
@@ -47,7 +37,7 @@ public class CashOnCashReturnTest {
 
     @Test
     void testNullYearOneCashFlow() {
-        Amount yearOneCapitalExpense = new Amount(new BigDecimal(BigInteger.ONE), currencyCode);
+        MonetaryAmount yearOneCapitalExpense = FastMoney.of(BigDecimal.ONE, currencyCode);
 
         Assertions.assertThrows(NullPointerException.class, () ->
                 new CashOnCashReturn(null, yearOneCapitalExpense));
@@ -55,8 +45,8 @@ public class CashOnCashReturnTest {
 
     @Test
     void testInvalidYearOneCapitalExpenses() {
-        Amount yearOneCashFlow = new Amount(new BigDecimal(BigInteger.ONE), currencyCode);
-        Amount yearOneCapitalExpense = new Amount(new BigDecimal(BigInteger.ZERO), currencyCode);
+        MonetaryAmount yearOneCashFlow = FastMoney.of(BigDecimal.ONE, currencyCode);
+        MonetaryAmount yearOneCapitalExpense = FastMoney.of(BigDecimal.ZERO, currencyCode);
 
         Assertions.assertThrows(IllegalArgumentException.class, () ->
                 new CashOnCashReturn(yearOneCashFlow, yearOneCapitalExpense));
@@ -64,7 +54,7 @@ public class CashOnCashReturnTest {
 
     @Test
     void testNullYearOneCapitalExpenses() {
-        Amount yearOneCashFlow = new Amount(new BigDecimal(BigInteger.ONE), currencyCode);
+        MonetaryAmount yearOneCashFlow = FastMoney.of(BigDecimal.ONE, currencyCode);
 
         Assertions.assertThrows(NullPointerException.class, () ->
                 new CashOnCashReturn(yearOneCashFlow, null));
@@ -77,7 +67,7 @@ public class CashOnCashReturnTest {
 
         // When
         // expenses are 1/10th the investment
-        Amount yearOneCapitalExpensesAmount = new Amount(new BigDecimal(yearOneCashFlow / 10), currencyCode);
+        MonetaryAmount yearOneCapitalExpensesAmount = yearOneCashFlowAmount.divide(10);
 
         // Then
         // cash on cash return is 100 / 10 = 10
@@ -96,7 +86,7 @@ public class CashOnCashReturnTest {
 
         // When
         // expenses are 10x the investment
-        Amount yearOneCapitalExpensesAmount = new Amount(new BigDecimal(yearOneCashFlow * 10), currencyCode);
+        MonetaryAmount yearOneCapitalExpensesAmount = yearOneCashFlowAmount.multiply(10);
 
         // Then
         // cash on cash return is 100 / 1000 = .1
@@ -115,7 +105,7 @@ public class CashOnCashReturnTest {
 
         // When
         // expenses are equal to the investment
-        Amount yearOneCapitalExpensesAmount = new Amount(new BigDecimal(yearOneCashFlow), currencyCode);
+        MonetaryAmount yearOneCapitalExpensesAmount = yearOneCashFlowAmount;
 
         // Then
         // cash on cash return is 100 / 100 = 1
