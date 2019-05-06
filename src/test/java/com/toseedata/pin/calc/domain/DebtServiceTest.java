@@ -9,6 +9,8 @@ import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * Example
  * Loan Principal (P): $200,000
@@ -23,8 +25,10 @@ public class DebtServiceTest {
 
     MonetaryAmount principal = FastMoney.of(200000, "USD");
     BigDecimal apr = new BigDecimal(.04);
-    int durationMonths = 30;
-    MonetaryAmount payment = FastMoney.of(954.83, "USD");
+    int durationMonths = 30 * 12;
+    MonetaryAmount paymentPI = FastMoney.of(954.83060, "USD");
+    MonetaryAmount paymentI = FastMoney.of(666.66670, "USD");
+
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
@@ -173,9 +177,45 @@ public class DebtServiceTest {
                 new DebtService.calculate().paymentsWithInterestOnly(debtService));
     }
 
+    @Test
+    public void testCalculateMonthlyPaymentsForPrincipalInterest() {
+        // Given
+        // A 200,000 loan for 30 years at 4%
+        DebtService debtService = DebtService.builder()
+                .principal(principal)
+                .apr(apr)
+                .durationMonths(durationMonths)
+                .build();
 
+        // When
+        // calculating the monthly expense paying principal and interest
+        MonetaryAmount payment = new DebtService.calculate().paymentsWithPricipalAndInterest(debtService);
 
+        // Then
+        // the payment should equal
+        assertEquals(
+                payment, this.paymentPI);
+    }
 
+    @Test
+    public void testCalculateMonthlyPaymentsForInterestOnly() {
+        // Given
+        // A 200,000 loan for 30 years at 4%
+        DebtService debtService = DebtService.builder()
+                .principal(principal)
+                .apr(apr)
+                .durationMonths(durationMonths)
+                .build();
+
+        // When
+        // calculating the monthly expense paying interest only
+        MonetaryAmount payment = new DebtService.calculate().paymentsWithInterestOnly(debtService);
+
+        // Then
+        // the payment should equal
+        assertEquals(
+                payment, this.paymentI);
+    }
 
 
 

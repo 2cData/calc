@@ -68,7 +68,7 @@ public final class DebtService {
             BigDecimal principal = new BigDecimal(debtService.principal.getNumber().doubleValueExact());
 
             // Payment with interest
-            BigDecimal payment = principal.multiply(discountFactor).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal payment = principal.multiply(discountFactor).setScale(4, RoundingMode.HALF_UP);
 
             // payments must be greater than/equal to $1
             assert (payment.compareTo(BigDecimal.ONE) >= 0);
@@ -90,7 +90,7 @@ public final class DebtService {
             BigDecimal monthlyInterestRate = calculatePeriodicInterestRate(debtService.apr);
 
             // Periodic Payments
-            BigDecimal payment = new BigDecimal(debtService.principal.getNumber().doubleValueExact()).multiply(monthlyInterestRate);
+            BigDecimal payment = new BigDecimal(debtService.principal.getNumber().doubleValueExact()).multiply(monthlyInterestRate).setScale(4, RoundingMode.HALF_UP);;
 
             // payments must be greater than/equal to $1
             assert (payment.compareTo(BigDecimal.ONE) >= 0);
