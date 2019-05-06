@@ -12,7 +12,7 @@ import static com.toseedata.pin.calc.config.Constants.CURRENCY_CODE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CashOnCashReturnTest {
-    String currencyCode = "USD";
+
     long yearOneCashFlow = 100;
     MonetaryAmount yearOneCashFlowAmount = FastMoney.of(yearOneCashFlow, CURRENCY_CODE);
 

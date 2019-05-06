@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.javamoney.moneta.FastMoney;
 
 import javax.annotation.Nonnull;
@@ -20,7 +20,7 @@ import static com.toseedata.pin.calc.config.Constants.MONTHS_IN_YEAR;
 
 @Data
 @NoArgsConstructor
-@Log
+@Slf4j
 public final class DebtService {
 
     private MonetaryAmount principal;
@@ -90,7 +90,7 @@ public final class DebtService {
             BigDecimal monthlyInterestRate = calculatePeriodicInterestRate(debtService.apr);
 
             // Periodic Payments
-            BigDecimal payment = new BigDecimal(debtService.principal.getNumber().doubleValueExact()).multiply(monthlyInterestRate).setScale(4, RoundingMode.HALF_UP);;
+            BigDecimal payment = new BigDecimal(debtService.principal.getNumber().doubleValueExact()).multiply(monthlyInterestRate).setScale(4, RoundingMode.HALF_UP);
 
             // payments must be greater than/equal to $1
             assert (payment.compareTo(BigDecimal.ONE) >= 0);

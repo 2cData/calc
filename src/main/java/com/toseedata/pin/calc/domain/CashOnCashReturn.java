@@ -1,23 +1,22 @@
 package com.toseedata.pin.calc.domain;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.money.MonetaryAmount;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@Service
-@Log
+@Component
+@Slf4j
 public final class CashOnCashReturn {
 
     private static MonetaryAmount yearOneCashFlow;
     private static MonetaryAmount yearOneCapitalExpenses;
 
     /**
-     *
      * @param yearOneCashFlow
      * @param yearOneCapitalExpenses
      */
