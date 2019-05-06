@@ -53,22 +53,15 @@ public final class DebtService {
          * @return
          */
         public MonetaryAmount paymentsWithPricipalAndInterest(@Nonnull final DebtService debtService) {
-            checkArgument(!debtService.principal.isNegativeOrZero(), "Principal must be greater than zero");
-            checkArgument(debtService.apr.compareTo(BigDecimal.ZERO) > 0, "Apr must be greater than zero");
-            checkArgument(debtService.durationMonths > 0, "Duration must be greater than zero");
 
-            checkNotNull(debtService.principal, "Principal must not be null");
-            checkNotNull(debtService.apr, "APR must not be null");
-
-            // Number of Periodic Payments (n) = Payments per year times number of years
-            int numberOfPeriodicPayments = debtService.durationMonths;
+            checkArguments(debtService);
 
             //Periodic Interest Rate (i) = Annual rate divided by number of payment periods
-            BigDecimal monthlyInterestRate = debtService.apr.divide(MONTHS_IN_YEAR, RoundingMode.HALF_UP);
+            BigDecimal monthlyInterestRate = calculatePeriodicInterestRate(debtService.apr);
 
             // Discount Factor (D) = {[(1 + i) ^n] - 1} / [i(1 + i)^n]
-            BigDecimal discountFactorNumerator = monthlyInterestRate.multiply(monthlyInterestRate.add(BigDecimal.ONE).pow(numberOfPeriodicPayments));
-            BigDecimal discountFactorDenominator = monthlyInterestRate.add(BigDecimal.ONE).pow(numberOfPeriodicPayments).subtract(BigDecimal.ONE);
+            BigDecimal discountFactorNumerator = monthlyInterestRate.multiply(monthlyInterestRate.add(BigDecimal.ONE).pow(debtService.durationMonths));
+            BigDecimal discountFactorDenominator = monthlyInterestRate.add(BigDecimal.ONE).pow(debtService.durationMonths).subtract(BigDecimal.ONE);
             BigDecimal discountFactor = discountFactorNumerator.divide(discountFactorDenominator, RoundingMode.HALF_UP);
 
             // Periodic Payments
@@ -90,16 +83,11 @@ public final class DebtService {
          * @return
          */
         public MonetaryAmount paymentsWithInterestOnly(@Nonnull final DebtService debtService) {
-            checkArgument(!debtService.principal.isNegativeOrZero(), "Principal must be greater than zero");
-            checkArgument(debtService.durationMonths > 0, "Duration must be greater than zero");
 
-            checkNotNull(debtService.principal, "Principal must not be null");
-
-            // Number of Periodic Payments (n) = Payments per year times number of years
-            int numberOfPeriodicPayments = debtService.durationMonths;
+            checkArguments(debtService);
 
             //Periodic Interest Rate (i) = Annual rate divided by number of payment periods
-            BigDecimal monthlyInterestRate = debtService.apr.divide(MONTHS_IN_YEAR, RoundingMode.HALF_UP);
+            BigDecimal monthlyInterestRate = calculatePeriodicInterestRate(debtService.apr);
 
             // Periodic Payments
             BigDecimal payment = new BigDecimal(debtService.principal.getNumber().doubleValueExact()).multiply(monthlyInterestRate);
@@ -108,6 +96,30 @@ public final class DebtService {
             assert (payment.compareTo(BigDecimal.ONE) >= 0);
 
             return FastMoney.of(payment, debtService.currencyUnit);
+        }
+
+        /**
+         * There are a common set of arguments
+         *
+         * @param debtService
+         */
+        private void checkArguments(final DebtService debtService) {
+            checkArgument(!debtService.principal.isNegativeOrZero(), "Principal must be greater than zero");
+            checkArgument(debtService.apr.compareTo(BigDecimal.ZERO) > 0, "Apr must be greater than zero");
+            checkArgument(debtService.durationMonths > 0, "Duration must be greater than zero");
+
+            checkNotNull(debtService.principal, "Principal must not be null");
+            checkNotNull(debtService.apr, "APR must not be null");
+        }
+
+        /**
+         * Periodic Interest Rate (i) = Annual rate divided by number of payment periods
+         * Make sure the rounding is consistent
+         *
+         * @return
+         */
+        private BigDecimal calculatePeriodicInterestRate(final BigDecimal apr) {
+            return apr.divide(MONTHS_IN_YEAR, RoundingMode.HALF_UP);
         }
     }
 }

@@ -104,6 +104,80 @@ public class DebtServiceTest {
                 new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
     }
 
+    @Test
+    void testPaymentsWithInterestOnlyInvalidPrincipal() {
+        DebtService debtService = DebtService.builder()
+                .principal(FastMoney.of(0, "USD"))
+                .apr(apr)
+                .durationMonths(durationMonths)
+                .build();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
+    }
+
+    @Test
+    void testPaymentsWithInterestOnlyNullPrincipal() {
+        DebtService debtService = DebtService.builder()
+                .apr(apr)
+                .durationMonths(durationMonths)
+                .build();
+
+        Assertions.assertThrows(NullPointerException.class, () ->
+                new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
+    }
+
+    @Test
+    void testPaymentsWithInterestOnlyInvalidAPR() {
+        DebtService debtService = DebtService.builder()
+                .principal(FastMoney.of(1, "USD"))
+                .apr(BigDecimal.ZERO)
+                .durationMonths(durationMonths)
+                .build();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
+    }
+
+    @Test
+    void testPaymentsWithInterestOnlyNullAPR() {
+        DebtService debtService = DebtService.builder()
+                .principal(FastMoney.of(1, "USD"))
+                .durationMonths(durationMonths)
+                .build();
+
+        Assertions.assertThrows(NullPointerException.class, () ->
+                new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
+    }
+
+    @Test
+    void testPaymentsWithInterestOnlyInvalidDurationMonths() {
+        DebtService debtService = DebtService.builder()
+                .principal(principal)
+                .apr(apr)
+                .durationMonths(-1)
+                .build();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
+    }
+
+    @Test
+    void testPaymentsWithInterestOnlyEmptyDurationMonths() {
+        DebtService debtService = DebtService.builder()
+                .principal(FastMoney.of(1, "USD"))
+                .apr(apr)
+                .build();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DebtService.calculate().paymentsWithInterestOnly(debtService));
+    }
+
+
+
+
+
+
 
     /*
     @Test
