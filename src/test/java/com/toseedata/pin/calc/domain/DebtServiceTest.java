@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 
 /**
  * Example
@@ -43,25 +42,28 @@ public class DebtServiceTest {
                 .durationMonths(durationMonths)
                 .build();
 
-        //DebtService mortgagePayment = DebtService.builder().principal(new MonetaryAmount(new BigDecimal(200000))).apr(new BigDecimal(.04)).durationMonths(360).build();
-
-
         Assertions.assertThrows(IllegalArgumentException.class, () ->
-                        new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
+                new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
     }
 
     @Test
     void testPaymentsWithPrincipalAndInterestNullPrincipal() {
-        DebtService debtService = DebtService.builder().apr(apr).durationMonths(durationMonths).build();
+        DebtService debtService = DebtService.builder()
+                .apr(apr)
+                .durationMonths(durationMonths)
+                .build();
 
         Assertions.assertThrows(NullPointerException.class, () ->
                 new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
     }
 
-
     @Test
     void testPaymentsWithPrincipalAndInterestInvalidAPR() {
-        DebtService debtService = DebtService.builder().principal(principal).apr(BigDecimal.ZERO).durationMonths(durationMonths).build();
+        DebtService debtService = DebtService.builder()
+                .principal(FastMoney.of(1, "USD"))
+                .apr(BigDecimal.ZERO)
+                .durationMonths(durationMonths)
+                .build();
 
         Assertions.assertThrows(IllegalArgumentException.class, () ->
                 new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
@@ -69,11 +71,39 @@ public class DebtServiceTest {
 
     @Test
     void testPaymentsWithPrincipalAndInterestNullAPR() {
-        DebtService debtService = DebtService.builder().apr(apr).durationMonths(durationMonths).build();
+        DebtService debtService = DebtService.builder()
+                .principal(FastMoney.of(1, "USD"))
+                .durationMonths(durationMonths)
+                .build();
 
         Assertions.assertThrows(NullPointerException.class, () ->
                 new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
     }
+
+
+    @Test
+    void testPaymentsWithPrincipalAndInterestInvalidDurationMonths() {
+        DebtService debtService = DebtService.builder()
+                .principal(principal)
+                .apr(apr)
+                .durationMonths(-1)
+                .build();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
+    }
+
+    @Test
+    void testPaymentsWithPrincipalAndInterestEmptyDurationMonths() {
+        DebtService debtService = DebtService.builder()
+                .principal(FastMoney.of(1, "USD"))
+                .apr(apr)
+                .build();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                new DebtService.calculate().paymentsWithPricipalAndInterest(debtService));
+    }
+
 
     /*
     @Test
@@ -159,15 +189,14 @@ public class DebtServiceTest {
 
     /**
      * paymentsWithPricipalAndInterest(@Nonnull final DebtService debtService) {
-     *             checkArgument(!debtService.principal.isNegativeOrZero(), "Principal must be greater than zero");
-     *             checkArgument(debtService.apr.compareTo(BigDecimal.ZERO) > 0, "Apr must be greater than zero");
-     *             checkArgument(debtService.durationMonths > 0, "Duration must be greater than zero");
-     *
-     *             checkNotNull(debtService.principal, "Principal must not be null");
-     *             checkNotNull(debtService.apr, "APR must not be null");
-     *             checkNotNull(debtService.durationMonths, "Duration must not be null");
+     * checkArgument(!debtService.principal.isNegativeOrZero(), "Principal must be greater than zero");
+     * checkArgument(debtService.apr.compareTo(BigDecimal.ZERO) > 0, "Apr must be greater than zero");
+     * checkArgument(debtService.durationMonths > 0, "Duration must be greater than zero");
+     * <p>
+     * checkNotNull(debtService.principal, "Principal must not be null");
+     * checkNotNull(debtService.apr, "APR must not be null");
+     * checkNotNull(debtService.durationMonths, "Duration must not be null");
      */
-
 
 
     @Test

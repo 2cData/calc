@@ -59,7 +59,6 @@ public final class DebtService {
 
             checkNotNull(debtService.principal, "Principal must not be null");
             checkNotNull(debtService.apr, "APR must not be null");
-            checkNotNull(debtService.durationMonths, "Duration must not be null");
 
             // Number of Periodic Payments (n) = Payments per year times number of years
             int numberOfPeriodicPayments = debtService.durationMonths;
@@ -95,7 +94,6 @@ public final class DebtService {
             checkArgument(debtService.durationMonths > 0, "Duration must be greater than zero");
 
             checkNotNull(debtService.principal, "Principal must not be null");
-            checkNotNull(debtService.durationMonths, "Duration must not be null");
 
             // Number of Periodic Payments (n) = Payments per year times number of years
             int numberOfPeriodicPayments = debtService.durationMonths;
