@@ -8,12 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 
+import static com.toseedata.pin.calc.config.Constants.CURRENCY_CODE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CashOnCashReturnTest {
     String currencyCode = "USD";
     long yearOneCashFlow = 100;
-    MonetaryAmount yearOneCashFlowAmount = FastMoney.of(yearOneCashFlow, currencyCode);
+    MonetaryAmount yearOneCashFlowAmount = FastMoney.of(yearOneCashFlow, CURRENCY_CODE);
 
     @Autowired
     private CashOnCashReturn cashOnCashReturn;
@@ -28,8 +29,8 @@ public class CashOnCashReturnTest {
 
     @Test
     void testInvalidYearOneCashFlow() {
-        MonetaryAmount yearOneCashFlow = FastMoney.of(BigDecimal.ZERO, currencyCode);
-        MonetaryAmount yearOneCapitalExpense = FastMoney.of(BigDecimal.ONE, currencyCode);
+        MonetaryAmount yearOneCashFlow = FastMoney.of(BigDecimal.ZERO, CURRENCY_CODE);
+        MonetaryAmount yearOneCapitalExpense = FastMoney.of(BigDecimal.ONE, CURRENCY_CODE);
 
         Assertions.assertThrows(IllegalArgumentException.class, () ->
                 new CashOnCashReturn(yearOneCashFlow, yearOneCapitalExpense));
@@ -37,7 +38,7 @@ public class CashOnCashReturnTest {
 
     @Test
     void testNullYearOneCashFlow() {
-        MonetaryAmount yearOneCapitalExpense = FastMoney.of(BigDecimal.ONE, currencyCode);
+        MonetaryAmount yearOneCapitalExpense = FastMoney.of(BigDecimal.ONE, CURRENCY_CODE);
 
         Assertions.assertThrows(NullPointerException.class, () ->
                 new CashOnCashReturn(null, yearOneCapitalExpense));
@@ -45,8 +46,8 @@ public class CashOnCashReturnTest {
 
     @Test
     void testInvalidYearOneCapitalExpenses() {
-        MonetaryAmount yearOneCashFlow = FastMoney.of(BigDecimal.ONE, currencyCode);
-        MonetaryAmount yearOneCapitalExpense = FastMoney.of(BigDecimal.ZERO, currencyCode);
+        MonetaryAmount yearOneCashFlow = FastMoney.of(BigDecimal.ONE, CURRENCY_CODE);
+        MonetaryAmount yearOneCapitalExpense = FastMoney.of(BigDecimal.ZERO, CURRENCY_CODE);
 
         Assertions.assertThrows(IllegalArgumentException.class, () ->
                 new CashOnCashReturn(yearOneCashFlow, yearOneCapitalExpense));
@@ -54,7 +55,7 @@ public class CashOnCashReturnTest {
 
     @Test
     void testNullYearOneCapitalExpenses() {
-        MonetaryAmount yearOneCashFlow = FastMoney.of(BigDecimal.ONE, currencyCode);
+        MonetaryAmount yearOneCashFlow = FastMoney.of(BigDecimal.ONE, CURRENCY_CODE);
 
         Assertions.assertThrows(NullPointerException.class, () ->
                 new CashOnCashReturn(yearOneCashFlow, null));
@@ -92,7 +93,7 @@ public class CashOnCashReturnTest {
         // cash on cash return is 100 / 1000 = .1
         cashOnCashReturn = new CashOnCashReturn(yearOneCashFlowAmount, yearOneCapitalExpensesAmount);
 
-        MonetaryAmount result = FastMoney.of(.1, "USD");
+        MonetaryAmount result = FastMoney.of(.1, CURRENCY_CODE);
 
         assertEquals(
                 CashOnCashReturn.calculate(), result);
@@ -111,7 +112,7 @@ public class CashOnCashReturnTest {
         // cash on cash return is 100 / 100 = 1
         cashOnCashReturn = new CashOnCashReturn(yearOneCashFlowAmount, yearOneCapitalExpensesAmount);
 
-        MonetaryAmount result = FastMoney.of(1, "USD");
+        MonetaryAmount result = FastMoney.of(1, CURRENCY_CODE);
 
         assertEquals(
                 CashOnCashReturn.calculate(), result);
