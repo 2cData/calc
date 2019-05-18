@@ -7,12 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import static com.toseedata.pin.calc.config.Constants.CURRENCY_CODE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
+ * Regular Loan
+ * Number of Periodic Payments (n) = Payments per year times number of years
+ * Periodic Interest Rate (i) = Annual rate divided by number of payment periods
+ * Discount Factor (D) = {[(1 + i) ^n] - 1} / [i(1 + i)^n]
+ * <p>
+ * https://www.thebalance.com/loan-payment-calculations-315564
+ *
+ * Interest Only
+ * Interest Only Payment = loan balance x (annual interest rate/12) Interest Only Payment
+ *
  * Example
  * Loan Principal (P): $200,000
  * APR: 4%
