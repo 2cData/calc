@@ -6,9 +6,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Nonnull;
 import javax.money.MonetaryAmount;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -21,7 +18,6 @@ public final class LoanToValueRatio {
 
 
     /**
-     *
      * @param loanAmount
      * @param fairMarketValue
      */
@@ -31,8 +27,8 @@ public final class LoanToValueRatio {
         checkNotNull(loanAmount, "loanAmount must not be null");
         checkNotNull(fairMarketValue, "fairMarketValue must not be null");
 
-        this.loanAmount = loanAmount;
-        this.fairMarketValue = fairMarketValue;
+        LoanToValueRatio.loanAmount = loanAmount;
+        LoanToValueRatio.fairMarketValue = fairMarketValue;
     }
 
     static MonetaryAmount calculate() {
@@ -42,6 +38,6 @@ public final class LoanToValueRatio {
 
         assert (!result.isZero());
 
-        return result;
+        return result.stripTrailingZeros();
     }
 }

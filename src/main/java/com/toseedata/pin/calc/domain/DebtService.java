@@ -16,6 +16,7 @@ import java.math.RoundingMode;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.toseedata.pin.calc.config.Constants.DECIMAL_SCALE;
 import static com.toseedata.pin.calc.config.Constants.MONTHS_IN_YEAR;
 
 @Data
@@ -68,12 +69,12 @@ public final class DebtService {
             BigDecimal principal = new BigDecimal(debtService.principal.getNumber().doubleValueExact());
 
             // Payment with interest
-            BigDecimal payment = principal.multiply(discountFactor).setScale(4, RoundingMode.HALF_UP);
+            BigDecimal payment = principal.multiply(discountFactor).setScale(DECIMAL_SCALE, RoundingMode.HALF_UP);
 
             // payments must be greater than/equal to $1
             assert (payment.compareTo(BigDecimal.ONE) >= 0);
 
-            return FastMoney.of(payment, debtService.currencyUnit);
+            return FastMoney.of(payment.stripTrailingZeros(), debtService.currencyUnit);
         }
 
         /**
@@ -90,7 +91,7 @@ public final class DebtService {
             BigDecimal monthlyInterestRate = calculatePeriodicInterestRate(debtService.apr);
 
             // Periodic Payments
-            BigDecimal payment = new BigDecimal(debtService.principal.getNumber().doubleValueExact()).multiply(monthlyInterestRate).setScale(4, RoundingMode.HALF_UP);
+            BigDecimal payment = new BigDecimal(debtService.principal.getNumber().doubleValueExact()).multiply(monthlyInterestRate).setScale(DECIMAL_SCALE, RoundingMode.HALF_UP);
 
             // payments must be greater than/equal to $1
             assert (payment.compareTo(BigDecimal.ONE) >= 0);
@@ -119,7 +120,7 @@ public final class DebtService {
          * @return
          */
         private BigDecimal calculatePeriodicInterestRate(final BigDecimal apr) {
-            return apr.divide(MONTHS_IN_YEAR, RoundingMode.HALF_UP);
+            return apr.divide(MONTHS_IN_YEAR, RoundingMode.HALF_UP).stripTrailingZeros();
         }
     }
 }

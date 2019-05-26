@@ -37,7 +37,7 @@ public final class CashOnCashReturn {
 
         assert (!result.isZero());
 
-        return result;
+        return result.stripTrailingZeros();
     }
 
 }

@@ -42,6 +42,6 @@ public final class EquityBuildUpRate {
 
         assert (!result.isZero());
 
-        return result;
+        return result.stripTrailingZeros();
     }
 }
