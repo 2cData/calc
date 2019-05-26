@@ -88,10 +88,15 @@ public class PresentValueTest {
                 new PresentValue(futureValue,durationYears,null));
     }
 
-
     @Test
     public void testValidCalculation() {
         Assertions.assertEquals(new BigDecimal(85.73).setScale(DECIMAL_SCALE,RoundingMode.HALF_UP).stripTrailingZeros().doubleValue(),
                 new PresentValue(futureValue,durationYears,apr).calculate().getNumber().doubleValueExact());
+    }
+
+    @Test
+    public void testValidCurrencyCode() {
+        Assertions.assertEquals(CURRENCY_CODE,
+                new PresentValue(futureValue, durationYears, apr).calculate().getCurrency().getCurrencyCode());
     }
 }
