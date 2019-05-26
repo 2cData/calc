@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Discount Factor (D) = {[(1 + i) ^n] - 1} / [i(1 + i)^n]
  * <p>
  * https://www.thebalance.com/loan-payment-calculations-315564
- *
+ * <p>
  * Interest Only
  * Interest Only Payment = loan balance x (annual interest rate/12) Interest Only Payment
- *
+ * <p>
  * Example
  * Loan Principal (P): $200,000
  * APR: 4%

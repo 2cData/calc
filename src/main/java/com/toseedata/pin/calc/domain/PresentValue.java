@@ -1,8 +1,5 @@
 package com.toseedata.pin.calc.domain;
 
-import org.javamoney.moneta.FastMoney;
-import org.javamoney.moneta.Money;
-
 import javax.annotation.Nonnull;
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
@@ -27,10 +24,10 @@ public final class PresentValue {
 
         checkArguments(futureValue, durationYears, apr);
 
-        this.futureValue = futureValue;
-        this.durationYears = durationYears;
-        this.apr = apr;
-        this.currencyUnit = Monetary.getCurrency(CURRENCY_CODE);
+        PresentValue.futureValue = futureValue;
+        PresentValue.durationYears = durationYears;
+        PresentValue.apr = apr;
+        currencyUnit = Monetary.getCurrency(CURRENCY_CODE);
     }
 
     public PresentValue(@Nonnull final MonetaryAmount futureValue,
@@ -40,10 +37,10 @@ public final class PresentValue {
 
         checkArguments(futureValue, durationYears, apr);
 
-        this.futureValue = futureValue;
-        this.durationYears = durationYears;
-        this.apr = apr;
-        this.currencyUnit = currencyUnit;
+        PresentValue.futureValue = futureValue;
+        PresentValue.durationYears = durationYears;
+        PresentValue.apr = apr;
+        PresentValue.currencyUnit = currencyUnit;
     }
 
     /**
@@ -58,10 +55,10 @@ public final class PresentValue {
         BigDecimal stepOne = BigDecimal.ONE.add(apr).setScale(DECIMAL_SCALE, RoundingMode.HALF_UP);
 
         // (1+i)n
-        BigDecimal stepTwo = stepOne.pow(durationYears).setScale(DECIMAL_SCALE , RoundingMode.HALF_UP);
+        BigDecimal stepTwo = stepOne.pow(durationYears).setScale(DECIMAL_SCALE, RoundingMode.HALF_UP);
 
         // 1/(1+i)n
-        BigDecimal stepThree = BigDecimal.ONE.divide(stepTwo, DECIMAL_SCALE , RoundingMode.HALF_UP );
+        BigDecimal stepThree = BigDecimal.ONE.divide(stepTwo, DECIMAL_SCALE, RoundingMode.HALF_UP);
 
         //FV[1/(1+i)n]
         MonetaryAmount stepFour = futureValue.multiply(stepThree);

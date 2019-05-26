@@ -37,7 +37,7 @@ public final class CapRate {
         BigDecimal noi = new BigDecimal(netOperatingIncome.getNumber().doubleValueExact());
         BigDecimal fmv = new BigDecimal(fairMarketValue.getNumber().doubleValueExact());
 
-        BigDecimal result = noi.divide(fmv,DECIMAL_SCALE,RoundingMode.HALF_UP);
+        BigDecimal result = noi.divide(fmv, DECIMAL_SCALE, RoundingMode.HALF_UP);
 
         assert (!result.equals(BigDecimal.ZERO));
 

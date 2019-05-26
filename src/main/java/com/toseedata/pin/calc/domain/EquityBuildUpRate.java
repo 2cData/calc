@@ -8,11 +8,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Equity Build Up Rate = Year 1 Mortgage Principal Paid / Year 1 Initial Cash Invested
- *
+ * <p>
  * Equity build up rate pairs perfectly with cash on cash return because they both calculate a source of returns in year 1.
  * Cash on cash return calculates a return on cash flow while equity build up rate calculates a return on principal payments.
  * When you add these two together, a total return in year 1 is the result.
- *
+ * <p>
  * These also pair well together because they are both only meant to be year 1 calculations
  * and are not to be used in subsequent years.
  * The reason is that they don't factor in the time value of money in the following years.
@@ -31,8 +31,8 @@ public final class EquityBuildUpRate {
         checkNotNull(yearOneMortgagePrincipalPaid, "Year One Mortgage Principal Paid must not be null");
         checkNotNull(yearOneInitialCashInvested, "Year One Initial Cash Invested must not be null");
 
-        this.yearOneMortgagePrincipalPaid = yearOneMortgagePrincipalPaid;
-        this.yearOneInitialCashInvested = yearOneInitialCashInvested;
+        EquityBuildUpRate.yearOneMortgagePrincipalPaid = yearOneMortgagePrincipalPaid;
+        EquityBuildUpRate.yearOneInitialCashInvested = yearOneInitialCashInvested;
     }
 
     static MonetaryAmount calculate() {

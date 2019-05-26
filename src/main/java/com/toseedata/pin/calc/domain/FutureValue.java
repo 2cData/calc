@@ -24,10 +24,10 @@ public final class FutureValue {
 
         checkArguments(cashFlow, durationYears, apr);
 
-        this.cashFlow = cashFlow;
-        this.durationYears = durationYears;
-        this.apr = apr;
-        this.currencyUnit = Monetary.getCurrency(CURRENCY_CODE);
+        FutureValue.cashFlow = cashFlow;
+        FutureValue.durationYears = durationYears;
+        FutureValue.apr = apr;
+        currencyUnit = Monetary.getCurrency(CURRENCY_CODE);
     }
 
     public FutureValue(@Nonnull final MonetaryAmount cashFlow,
@@ -37,10 +37,10 @@ public final class FutureValue {
 
         checkArguments(cashFlow, durationYears, apr);
 
-        this.cashFlow = cashFlow;
-        this.durationYears = durationYears;
-        this.apr = apr;
-        this.currencyUnit = currencyUnit;
+        FutureValue.cashFlow = cashFlow;
+        FutureValue.durationYears = durationYears;
+        FutureValue.apr = apr;
+        FutureValue.currencyUnit = currencyUnit;
     }
 
     /**
@@ -55,7 +55,7 @@ public final class FutureValue {
         BigDecimal stepOne = BigDecimal.ONE.add(apr).setScale(DECIMAL_SCALE, RoundingMode.HALF_UP);
 
         // (1+r)^n
-        BigDecimal stepTwo = stepOne.pow(durationYears).setScale(DECIMAL_SCALE , RoundingMode.HALF_UP);
+        BigDecimal stepTwo = stepOne.pow(durationYears).setScale(DECIMAL_SCALE, RoundingMode.HALF_UP);
 
         // C(1+r)^n
         MonetaryAmount stepThree = cashFlow.multiply(stepTwo);
